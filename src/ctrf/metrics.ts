@@ -130,6 +130,7 @@ export function calculateRateChange(current: number, previous: number): number {
  * @returns `true` if the test is considered flaky, otherwise `false`.
  */
 export function isTestFlaky(test: CtrfTest): boolean {
+  core.info(`IS TEST FLAKY: retries:${test.retries} status: ${test.status} flaky: ${test.flaky}`);
   return (
     test.flaky ||
     (test.retries && test.retries > 0 && test.status === 'passed') ||
