@@ -130,7 +130,7 @@ export function calculateRateChange(current: number, previous: number): number {
  * @returns `true` if the test is considered flaky, otherwise `false`.
  */
 export function isTestFlaky(test: CtrfTest): boolean {
-  core.info(`IS TEST FLAKY: retries:${test.retries} status: ${test.status} flaky: ${test.flaky}`);
+  core.info(`IS TEST FLAKY: name: ${test.name} retries:${test.retries} status: ${test.status} flaky: ${test.flaky}`);
   return (
     test.flaky ||
     (test.retries && test.retries > 0 && test.status === 'passed') ||
@@ -181,6 +181,7 @@ function aggregateHistoricalTestData(
   const reportsUsed = reportsToProcess.length
 
   reportsToProcess.forEach(report => {
+    console.log(`PROCESS REPORT`, report);
     report.results.tests.forEach(test => {
       if (!metricsMap.has(test.name)) {
         metricsMap.set(test.name, createEmptyMetrics())
