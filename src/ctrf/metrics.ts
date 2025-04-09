@@ -183,6 +183,7 @@ function aggregateHistoricalTestData(
   reportsToProcess.forEach(report => {
     console.log(`PROCESS REPORT`, report);
     report.results.tests.forEach(test => {
+      console.log(`PROCESS REPORT TEST:`, test);
       if (!metricsMap.has(test.name)) {
         metricsMap.set(test.name, createEmptyMetrics())
       }
