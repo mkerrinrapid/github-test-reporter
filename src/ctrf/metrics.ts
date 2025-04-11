@@ -279,6 +279,14 @@ export async function processPreviousResultsAndMetrics(
         break
       }
 
+      const artifacts = await processArtifactsFromRun(
+          run,
+          inputs.artifactName
+      )
+      core.info(
+          `Retrieved ${artifacts.length} artifacts from run ${run.id}`
+      )
+
       core.debug(
         `Checking if run ${run.id} matches current workflow run ${currentWorkflowRun.id}`
       )
@@ -304,13 +312,6 @@ export async function processPreviousResultsAndMetrics(
       if (isMatching) {
         core.info(`Attempting to process MATCHING artifacts for run ${run.id}`)
         try {
-          const artifacts = await processArtifactsFromRun(
-            run,
-            inputs.artifactName
-          )
-          core.info(
-            `Retrieved ${artifacts.length} artifacts from run ${run.id}`
-          )
           reports.push(...artifacts)
           completed = reports.length
           core.info(`Processed report from run ${run.id}`)
