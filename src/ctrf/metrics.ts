@@ -279,7 +279,7 @@ export async function processPreviousResultsAndMetrics(
         break
       }
 
-      core.info(
+      core.debug(
         `Checking if run ${run.id} matches current workflow run ${currentWorkflowRun.id}`
       )
       if (run.id === currentWorkflowRun.id) {
@@ -293,11 +293,11 @@ export async function processPreviousResultsAndMetrics(
         githubContext,
         currentWorkflowRun
       )
-      core.info(
+      core.debug(
         `Run ${run.id}: ${run.name} ${run.run_number} is ${isMatching ? 'matching' : 'not matching'} ${currentWorkflowRun.id}: ${currentWorkflowRun.name} ${currentWorkflowRun.run_number}`
       )
       if (isMatching) {
-        core.debug(`Attempting to process artifacts for run ${run.id}`)
+        core.info(`Attempting to process MATCHING artifacts for run ${run.id}`)
         try {
           const artifacts = await processArtifactsFromRun(
             run,
@@ -339,7 +339,8 @@ export async function processPreviousResultsAndMetrics(
       break
     }
   }
-  reports = reports.slice(0, inputs.previousResultsMax - 1)
+    reports = reports.slice(0, inputs.previousResultsMax - 1)
+    console.log(`Processing reports:`, reports);
 
   let updatedReport = addPreviousReportsToCurrentReport(reports, report)
 
