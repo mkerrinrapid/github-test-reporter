@@ -240,14 +240,14 @@ export async function processPreviousResultsAndMetrics(
     `Configuration: previousResultsMax=${inputs.previousResultsMax}, maxWorkflowRunsToCheck=${inputs.maxWorkflowRunsToCheck}`
   )
   core.debug(`Artifact name to process: ${inputs.artifactName}`)
-  core.info(`Starting workflow runs processing...`)
+    core.info(`Starting workflow runs processing (${githubContext.run_id}) ...`)
 
   const currentWorkflowRun = await fetchWorkflowRun(
     context.repo.owner,
     context.repo.repo,
     githubContext.run_id
   )
-  core.debug(
+  core.info(
     `Current workflow details - ID: ${currentWorkflowRun.id}, Name: ${currentWorkflowRun.name}, Run #: ${currentWorkflowRun.run_number}`
   )
 
@@ -279,11 +279,11 @@ export async function processPreviousResultsAndMetrics(
         break
       }
 
-      core.debug(
+      core.info(
         `Checking if run ${run.id} matches current workflow run ${currentWorkflowRun.id}`
       )
       if (run.id === currentWorkflowRun.id) {
-        core.debug(
+        core.info(
           `Run ${run.id} is the same as the current workflow run ${currentWorkflowRun.id}, skipping`
         )
         continue
@@ -293,7 +293,7 @@ export async function processPreviousResultsAndMetrics(
         githubContext,
         currentWorkflowRun
       )
-      core.debug(
+      core.info(
         `Run ${run.id}: ${run.name} ${run.run_number} is ${isMatching ? 'matching' : 'not matching'} ${currentWorkflowRun.id}: ${currentWorkflowRun.name} ${currentWorkflowRun.run_number}`
       )
       if (isMatching) {
@@ -303,13 +303,13 @@ export async function processPreviousResultsAndMetrics(
             run,
             inputs.artifactName
           )
-          core.debug(
+          core.info(
             `Retrieved ${artifacts.length} artifacts from run ${run.id}`
           )
           reports.push(...artifacts)
           completed = reports.length
-          core.debug(`Processed report from run ${run.id}`)
-          core.debug(`Processed ${completed} reports in total`)
+          core.info(`Processed report from run ${run.id}`)
+          core.info(`Processed ${completed} reports in total`)
         } catch (error) {
           core.debug(
             `Error processing artifacts for run ${run.id}: ${error instanceof Error ? error.message : 'Unknown error'}`
