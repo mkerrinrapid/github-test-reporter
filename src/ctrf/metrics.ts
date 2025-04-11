@@ -283,8 +283,13 @@ export async function processPreviousResultsAndMetrics(
         `Checking if run ${run.id} matches current workflow run ${currentWorkflowRun.id}`
       )
       if (run.id === currentWorkflowRun.id) {
+        const isMatching2 = isMatchingWorkflowRun(
+            run,
+            githubContext,
+            currentWorkflowRun
+	)
         core.info(
-          `Run ${run.id} is the same as the current workflow run ${currentWorkflowRun.id}, skipping`
+            `Run ${run.id} is the same as the current workflow run ${currentWorkflowRun.id}, matching (${isMatching2 ? 'matching' : 'not matching'}) skipping`
         )
         continue
       }
