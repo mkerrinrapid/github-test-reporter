@@ -8,7 +8,7 @@ import {
   prefixTestNames
 } from './enrichers'
 import { stripAnsiFromErrors } from './helpers'
-import { processPreviousResultsAndMetrics } from './metrics'
+import { processPreviousResultsAndMetrics, processFlakyRerun } from './metrics'
 import { convertJUnitToCTRFReport } from 'junit-to-ctrf'
 
 /**
@@ -59,6 +59,8 @@ export async function prepareReport(
       githubContext
     )
   }
+
+  report = await processFlakyRerun(inputs, report, githubContext)
 
   return report
 }

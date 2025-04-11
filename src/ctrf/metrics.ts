@@ -216,6 +216,44 @@ export function combineMetrics(a: TestMetrics, b: TestMetrics): TestMetrics {
 }
 
 /**
+ * Find flaky tests
+ *
+ * @param inputs - The user-provided inputs for processing.
+ * @param report - The current CTRF report to process.
+ * @param githubContext - The GitHub context for the workflow run.
+ * @returns A promise resolving to the updated CTRF report with processed metrics.
+ */
+export async function processFlakyRerun(
+    inputs: Inputs,
+    report: CtrfReport,
+    githubContext: GitHubContext
+): Promise<CtrfReport> {
+  const currentWorkflowRun = await fetchWorkflowRun(
+    context.repo.owner,
+    context.repo.repo,
+    githubContext.run_id
+  )
+//  core.info(
+//    `FLAKY: Current workflow details - ID: ${currentWorkflowRun.id}, Name: ${currentWorkflowRun.name}, Run #: ${currentWorkflowRun.run_number}`
+//  )
+
+  const artifacts = await processArtifactsFromRun(
+      currentWorkflowRun,
+      inputs.artifactName
+  )
+//  core.info(
+//      `FLAKY: Retrieved ${artifacts.length} artifacts from run ${currentWorkflowRun.id}`
+//  )
+
+    for (const artifact of artifacts) {
+	const failed = artifact.results.tests.filter(test => test.status === "failed")
+	console.log(`failed tests:`, failed)
+    }
+
+  return report
+}
+
+/**
  * Processes previous workflow run results and enriches the CTRF report with reliability metrics.
  *
  * @param inputs - The user-provided inputs for processing.
